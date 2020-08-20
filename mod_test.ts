@@ -1,14 +1,37 @@
-import { assertEquals } from "https://deno.land/std@0.65.0/testing/asserts.ts";
+// see https://gDeno.testhub.com/jonschlinkert/longest/blob/7c384a11faeef50c1e38d9bd93b14f18c4cd788d/test.js
+import {
+  assertEquals,
+  assertThrows,
+} from "https://deno.land/std@0.65.0/testing/asserts.ts";
 
-import starter from "./mod.ts";
+import longest from "./mod.ts";
 
-Deno.test("test starter function", (): void => {
-  assertEquals(starter("abc"), "abc");
+Deno.test("should return null when array is empty", function () {
+  assertEquals(longest([]), undefined);
 });
 
-Deno.test({
-  name: "test starter function",
-  fn(): void {
-    assertEquals(starter("foo bar"), "foo bar");
-  },
+Deno.test("should throw an error when value is not an array", function () {
+  assertThrows(function () {
+    // deno-lint-ignore ban-ts-comment
+    // @ts-ignore
+    longest();
+  });
+});
+
+Deno.test("should return the longest Deno.testem in the array", function () {
+  assertEquals(longest(["a", "abcde", "abc"]), "abcde");
+  assertEquals(longest(["a", "bb", "ccc"]), "ccc");
+  assertEquals(longest(["a", "bbbb", "ccc"]), "bbbb");
+  assertEquals(longest(["aaaaa", "bbbb", "ccc"]), "aaaaa");
+});
+
+Deno.test("should skip over sparse elements", function () {
+  assertEquals(
+    longest(["a", "abcde", null as unknown as string, undefined as unknown as string, "abc"]),
+    "abcde",
+  );
+});
+
+Deno.test("should skip over elements that do not have a .length property", function () {
+  assertEquals(longest(["a", "abcde", {} as unknown as string, "abc"]), "abcde");
 });
