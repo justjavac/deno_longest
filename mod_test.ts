@@ -27,11 +27,22 @@ Deno.test("should return the longest Deno.testem in the array", function () {
 
 Deno.test("should skip over sparse elements", function () {
   assertEquals(
-    longest(["a", "abcde", null as unknown as string, undefined as unknown as string, "abc"]),
+    longest(
+      [
+        "a",
+        "abcde",
+        null as unknown as string,
+        undefined as unknown as string,
+        "abc",
+      ],
+    ),
     "abcde",
   );
 });
 
 Deno.test("should skip over elements that do not have a .length property", function () {
-  assertEquals(longest(["a", "abcde", {} as unknown as string, "abc"]), "abcde");
+  assertEquals(
+    longest(["a", "abcde", {} as unknown as string, "abc"]),
+    "abcde",
+  );
 });
